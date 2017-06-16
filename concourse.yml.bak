@@ -1,0 +1,151 @@
+---
+name: concourse
+
+director_uuid: cc6b3019-788f-4c32-a865-67c09d40ed9c
+
+releases:
+- name: concourse
+  version: latest
+- name: garden-runc
+  version: latest
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: latest
+
+instance_groups:
+- name: web
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: m1.medium
+  vm_extensions: []
+  stemcell: trusty
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: atc
+    release: concourse
+    properties:
+      external_url: https://192.168.3.241
+      basic_auth_username: concourse
+      basic_auth_password: changeme
+      tls_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIID0zCCArugAwIBAgIJAKNkFSkl5FsIMA0GCSqGSIb3DQEBCwUAMFcxCzAJBgNV
+          BAYTAlNBMRUwEwYDVQQIEwxKb2hhbm5lc2J1cmcxETAPBgNVBAcTCFJhbmRidXJn
+          MRIwEAYDVQQKEwlIdW50cmVjaHQxCjAIBgNVBAMUASowHhcNMTcwMzE2MTU0OTQy
+          WhcNMjcwMzE0MTU0OTQyWjBXMQswCQYDVQQGEwJTQTEVMBMGA1UECBMMSm9oYW5u
+          ZXNidXJnMREwDwYDVQQHEwhSYW5kYnVyZzESMBAGA1UEChMJSHVudHJlY2h0MQow
+          CAYDVQQDFAEqMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxifQlHcG
+          7LggXURgXtYXlYyPQtvLVhtsMqlho1OFjdmX7gDEexYjFyVGO6T8OjaiQKXHbb9E
+          r8uUsUCxulzRqG0OnMUvTGqUpyTG+2dolri2X49ArqQwQJcs8VhkF9hC1cuDYBm+
+          Nbkvb32JejgmAUxMg8S9KlyOrkd/3IB/n6+rKvbBYOEeRjGhDop54G21nC66A/ap
+          5aAYZgSWiEdho6rDne+UUQ4uzLk+ANKcMFW7HX//4aLREviWzy1YxmpaYaEjRFkc
+          ChpgrXDqFyqKc7cdFJ/ToAD2G/evACWRgvitTrzPOCOFih+rmvWd8ntIGeo2u4F2
+          vErq/rHjiTjmlQIDAQABo4GhMIGeMB0GA1UdDgQWBBRaHBJZ25hh98BgwgSPpad8
+          3+6wQjAfBgNVHSMEGDAWgBRaHBJZ25hh98BgwgSPpad83+6wQjAMBgNVHRMEBTAD
+          AQH/ME4GA1UdEQRHMEWHBMCoA/GCASqCAyouKoIFKi4qLiqCByouKi4qLiqCCSou
+          Ki4qLiouKoILKi4qLiouKi4qLiqCDSouKi4qLiouKi4qLiowDQYJKoZIhvcNAQEL
+          BQADggEBAAkJPo1wdF1oEWizB+57NkoR4goCQWJN5zCGUUlZPX0WNArFlPPVc2LC
+          xuj2ZehytM6eeFl2HcpnC46znuDhNjJSftfLAzuaOHu0AgrX47iuWKn0KuN0j8Z9
+          j7b+WwMDqFNaCleA/IASu+79Mr8ZoMKHmC0xBBcYasF86vhw/tWwUx40Q8Pt7A6q
+          3vom/xb7XruYTLpOm6xQ9nfWNiXpPLsLfZ/OjOglHxN4rqm5VVOBpFy3uuOma35Q
+          3/uJOQ4dFw/iuOwmQ43mTKM81YSvAGpqJ3WMSUvgin3XJD65KWHOT0a0XNYfQXn/
+          O3xpGWnVtxvxlGgDYpuh08pWAJ+WH9c=
+          -----END CERTIFICATE-----
+      tls_key: |
+          -----BEGIN PRIVATE KEY-----
+          MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGJ9CUdwbsuCBd
+          RGBe1heVjI9C28tWG2wyqWGjU4WN2ZfuAMR7FiMXJUY7pPw6NqJApcdtv0Svy5Sx
+          QLG6XNGobQ6cxS9MapSnJMb7Z2iWuLZfj0CupDBAlyzxWGQX2ELVy4NgGb41uS9v
+          fYl6OCYBTEyDxL0qXI6uR3/cgH+fr6sq9sFg4R5GMaEOinngbbWcLroD9qnloBhm
+          BJaIR2GjqsOd75RRDi7MuT4A0pwwVbsdf//hotES+JbPLVjGalphoSNEWRwKGmCt
+          cOoXKopztx0Un9OgAPYb968AJZGC+K1OvM84I4WKH6ua9Z3ye0gZ6ja7gXa8Sur+
+          seOJOOaVAgMBAAECggEBAJiGGwG8IKNjEt5XfEpjRqIBIGCZKAlucDkKsbHy3xER
+          lOVIx/PqVTZCpa3RT6hLV1alhD0QhYE/FYPeRS8qtOKMlzvKd569RxDkuRjYPuQM
+          56vkayhCDzYYZyqaG+lSuBcyYDw/dG6LzVxm58QgpfhHz3l5nRWXSugQ9vU2H4Y8
+          aEdpdYwjToSK2SOOL55Dkiu8sXGmWuZ5J9Fozu9gC2RzxVjDaBOzfskIn4BPVWVX
+          urNBKFJmBP4dyz0SJqYKSgbTMJqt7oY6vlBptoV3wHj2Bo92Mxdx9e5BAmxR/js9
+          L5TY3eztNEpv0LdPjimB4KybHV7vBjRkmlkpF1Wm1QECgYEA9lt/YoOcYBfb8GNr
+          hoTjVWFN3lHqp7kyyY/LDQKQ73DjGps70RvrLacOWG1SLjxxFfejsv2Wgs0KW+/P
+          F4bf5qBUD8LH9QmRfSziiLJJEpMJJAYM8vBt9wo8i9ycJgAMhn49lOyOj0hHpEHu
+          zJX7ZXTflnWde9L7UCWwlP4XXFUCgYEAzelVhDzJrMKF6a1U9hC0wO3snE8fyt+7
+          EXLhtyd/nRqC4H2ydtStLK0nRe6xNImlUjRzkCEpnbLeON5gacEq6bqqy8oLBgE0
+          B5Vc5BhygJPO/LK8VhVyN1Kc8ZI8s25H75w4BhydFzmjJzorlnEzGNtQFyvJ5lx6
+          72P6KfxVoUECgYBtAFzjdMIKzmO0//hCY6fGTjBK7sm5fjrXbfT0g68nEjaZvheA
+          VS8AWwsA2xXieUG7638VohgnNZugxAFIMpf8jfHDq3YXmC00SljNDL1CJ6aCtt6h
+          2vl8tZ3GcEzyj1D7bP3IV8ZX5S41oiqLgMzjvgtzogSVFeu2MYbo1Wf2pQKBgDeK
+          IVvavZcQnOgrrYf1d5u2USTUHsIs2JtbPlCVodExTm3Y2aM9uDwdtEMjn76JBgOH
+          TEhq+XukvFXgfWbpCHckt17ib1i+SFdnTTfk9DWEKMd2OmCJxlXvvY9XH3JSY6rY
+          my/i1ehmzoANK6aXf+3Lce3eDMZK2YnqkJZ0jnBBAoGAHdnnDhm/WUDwSwqDTLWw
+          zG+E9oUyQE7i9zyuNqRXYwKS4mQaVNahqhJvgYrClGvLxncDm3TYl6n/ogJSZz89
+          ADmRCLE+ahxTSbQFy8qIm12RcWoXITPShc0DJrCSwWdnsO8dBxEEBb0tqkCRciVe
+          haSxK0c7OOB8wYaRVCJ5YDk=
+          -----END PRIVATE KEY-----
+
+      postgresql_database: &atc_db atc
+  - name: tsa
+    release: concourse
+    properties: {}
+
+- name: db
+  instances: 1
+  vm_type: m1.small
+  stemcell: trusty
+  persistent_disk_type: '102400'
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: postgresql
+    release: concourse
+    properties:
+      databases:
+      - name: *atc_db
+        # make up a role and password
+        role: postgres
+        password: postgres
+
+- name: worker
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: m1.medium
+  vm_extensions: []
+  stemcell: trusty
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: groundcrew
+    release: concourse
+    properties: {}
+  - name: baggageclaim
+    release: concourse
+    properties: {}
+  - name: garden
+    release: garden-runc
+    properties:
+      garden:
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000

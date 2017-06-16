@@ -1,0 +1,97 @@
+---
+name: concourse
+
+director_uuid: cc6b3019-788f-4c32-a865-67c09d40ed9c
+
+releases:
+- name: concourse
+  version: latest
+- name: garden-runc
+  version: latest
+
+stemcells:
+- alias: trusty
+  os: ubuntu-trusty
+  version: '3312.12'
+
+instance_groups:
+- name: web
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: m1.medium
+  vm_extensions: []
+  stemcell: trusty
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: atc
+    release: concourse
+    properties:
+      external_url: http://192.168.3.241:8080
+      basic_auth_username: concourse
+      basic_auth_password: changeme
+      postgresql_database: &atc_db atc
+  - name: tsa
+    release: concourse
+    properties: {}
+
+- name: db
+  instances: 1
+  vm_type: m1.small
+  stemcell: trusty
+  persistent_disk_type: '102400'
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: postgresql
+    release: concourse
+    properties:
+      databases:
+      - name: *atc_db
+        # make up a role and password
+        role: postgres
+        password: postgres
+
+- name: worker
+  instances: 1
+  # replace with a VM type from your BOSH Director's cloud config
+  vm_type: m1.medium
+  vm_extensions: []
+  stemcell: trusty
+  azs: 
+  - nova
+  networks:
+  - name: int-net
+    default:
+    - dns
+    - gateway
+  jobs:
+  - name: groundcrew
+    release: concourse
+    properties: {}
+  - name: baggageclaim
+    release: concourse
+    properties: {}
+  - name: garden
+    release: garden-runc
+    properties:
+      garden:
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
